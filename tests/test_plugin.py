@@ -291,6 +291,23 @@ class TestBasicRouting(TestCase):
             resp = test_run('/')
             self.assertEqual('Hello Videos', resp[0].get_label())
 
+    def test_redirect_with_arguments(self):
+        plugin = new_plugin()
+
+        @plugin.route('/')
+        def main_menu():
+            url = plugin.url_for('videos', label='Entertaining video')
+            return plugin.redirect(url)
+
+        @plugin.route('/videos/')
+        def videos():
+            return [{'label': plugin.request.args.get('label')[0]}]
+
+        with preserve_cli_mode(cli_mode=False):
+            test_run = _test_plugin_runner(plugin)
+            resp = test_run('/')
+            self.assertEqual('Entertaining video', resp[0].get_label())
+
 
 class TestUnsyncedCaches(TestCase):
     def test_unsyced_caches(self):
