@@ -304,6 +304,7 @@ class ListItem(object):
 
         if is_playable:
             listitem.playable = True
+            listitem.is_folder = False
 
         if properties:
             # Need to support existing tuples, but prefer to have a dict for
